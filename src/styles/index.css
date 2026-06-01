@@ -1,0 +1,23 @@
+:root {
+  --accent: #C8502A;
+}
+
+body {
+  background-color: #F7F5F0;
+}
+
+.font-display {
+  font-family: Georgia, serif;
+}
+
+.text-accent { color: var(--accent); }
+.bg-accent { background-color: var(--accent); }
+.btn-accent {
+  background-color: var(--accent);
+  color: #fff;
+  border: none;
+}
+.btn-accent:hover {
+  background-color: #a93d1f;
+  color: #fff;
+}
