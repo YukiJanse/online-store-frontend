@@ -1,3 +1,5 @@
+import { Navigate } from 'react-router-dom';
+
 const MOCK_ORDERS = [
   { id: '#ORD-A3F9K2', date: 'May 14, 2026', status: 'Delivered',  items: ['Mens Cotton Jacket', 'WD 2TB Hard Drive'], total: 119.99 },
   { id: '#ORD-B7XQ01', date: 'Apr 28, 2026', status: 'Shipped',    items: ['Silicon Power 256GB SSD'], total: 109.00 },
@@ -12,6 +14,12 @@ const STATUS = {
 };
 
 export default function Account() {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+
   return (
     <main className="container my-4">
       <div className="row g-4 align-items-start">
