@@ -20,4 +20,8 @@ export const usersApi = {
         request('users/refresh', {
             method: 'POST',
         }),
+    me: () =>
+        request('users/me', {
+            method: 'GET',
+        })
 };
