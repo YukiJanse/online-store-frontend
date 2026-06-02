@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usersApi } from '../api/users';
+import { Link } from 'react-router-dom';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -69,6 +70,7 @@ export default function Login() {
                   Login
                 </button>
               </form>
+              <Link to="/register" className="text-accent small">Register new account</Link>
             </div>
           </div>
         </div>
