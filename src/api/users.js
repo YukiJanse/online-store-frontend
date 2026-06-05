@@ -23,5 +23,11 @@ export const usersApi = {
     me: () =>
         request('users/me', {
             method: 'GET',
-        })
+        }),
+    updateNames: (data) =>
+        request('users/names', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }),
 };

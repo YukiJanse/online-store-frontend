@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { ordersApi } from '../api/orders';
+import { useUsers } from '../hooks/useUsers'; 
 
 const FREE_SHIPPING_THRESHOLD = 50;
 const SHIPPING_COST = 4.99;
 
 export default function Checkout() {
   const { cart, subtotal, clearCart } = useCart();
+  const { userInfo, userLoading, userLoadingError } = useUsers();
   const [placing, setPlacing] = useState(false);
   const [orderId, setOrderId] = useState(null);
   const [form, setForm] = useState({
@@ -15,6 +17,21 @@ export default function Checkout() {
     address: '', city: '', postal: '', country: 'Sweden',
     cardNumber: '', expiry: '', cvv: '',
   });
+
+  useEffect(() => {
+  if (!userInfo) return;
+
+  setForm((prev) => ({
+    ...prev,
+    firstName: userInfo.firstName,
+    lastName: userInfo.lastName,
+    email: userInfo.email,
+    address: userInfo.address.street,
+    city: userInfo.address.city,
+    postal: userInfo.address.postalCode,
+    country: userInfo.address.country,
+  }));
+}, [userInfo]);
 
   const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
   const total = subtotal + shipping;
@@ -24,7 +41,20 @@ export default function Checkout() {
     e.preventDefault();
     setPlacing(true);
     try {
-      await ordersApi.create({ userId: 1, date: new Date().toISOString(), products: cart.map((i) => ({ productId: i.id, quantity: i.qty })) });
+      await ordersApi.create({
+        items: cart.map((i) => ({ productId: i.id, title: i.title, price: i.price, image: i.image, quantity: i.qty })),
+        shippingInfo: {
+          firstName: form.firstName,
+          lastName: form.lastName,
+          address: {
+            street: form.address,
+            city: form.city,
+            postalCode: form.postal,
+            country: form.country,
+          }
+        },
+        status: "PENDING",
+      });
     } catch {}
     const id = '#ORD-' + Math.random().toString(36).substring(2, 8).toUpperCase();
     clearCart();

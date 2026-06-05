@@ -1,24 +1,67 @@
-const BASE_URL = 'http://localhost:5001/v1/';
+//const BASE_URL = 'http://localhost:5001/v1';
+const BASE_URL = 'https://yukijanse-store.duckdns.org/v1';
 
-export async function request(path, options = {}) {
-    const token = localStorage.getItem('token');
+let refreshPromise = null;
 
-    const res = await fetch(`${BASE_URL}${path}`, {
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...(token && { Authorization: `Bearer ${token}` }),
-            ...(options.headers || {}),
-        },
-    });
+export async function request(url, options = {}) {
+  const token = localStorage.getItem('accessToken');
 
-    if (!res.ok) {
-        throw new Error(`API error: ${res.status}`);
+  let response = await fetch(`${BASE_URL}/${url}`, {
+    ...options,
+    headers: {
+      ...options.headers,
+      Authorization: token ? `Bearer ${token}` : undefined,
+    },
+    credentials: 'include',
+  });
+
+  if (response.status !== 401) {
+    if (!response.ok) {
+      throw new Error(await response.text());
     }
 
-    if (res.status === 204) {
-        return null;
-    }
+    return response.json();
+  }
 
-    return res.json();
+  // Prevent multiple refresh calls simultaneously
+  if (!refreshPromise) {
+    refreshPromise = fetch(`${BASE_URL}/users/refresh`, {
+      method: 'POST',
+      credentials: 'include',
+    })
+      .then(async (r) => {
+        if (!r.ok) {
+          throw new Error('Refresh failed');
+        }
+
+        const data = await r.json();
+
+        localStorage.setItem(
+          'accessToken',
+          data.accessToken
+        );
+
+        return data.accessToken;
+      })
+      .finally(() => {
+        refreshPromise = null;
+      });
+  }
+
+  const newToken = await refreshPromise;
+
+  response = await fetch(`${BASE_URL}/${url}`, {
+    ...options,
+    headers: {
+      ...options.headers,
+      Authorization: `Bearer ${newToken}`,
+    },
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error(await response.text());
+  }
+
+  return response.json();
 }

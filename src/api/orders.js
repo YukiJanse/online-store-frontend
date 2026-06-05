@@ -1,6 +1,11 @@
 import { request } from './client'
 
 export const ordersApi = {
+    create: (data) => request('orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    }),
     getAll: () => request('orders'),
     getById: (id) => request(`orders/${id}`),
     changeQuantity: (id, data) =>
