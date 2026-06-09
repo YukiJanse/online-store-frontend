@@ -21,7 +21,17 @@ export default function Account() {
   const token = localStorage.getItem('accessToken');
   const [tab, setTab] = useState('orders'); // 'orders' | 'profile'
   const [editMode, setEditMode] = useState(false);
-  const [form, setForm] = useState({ firstName: '', lastName: '' });
+  const [form, setForm] = useState({
+    firstName: '',
+    lastName: '',
+    phoneNumber: '',
+    address: {
+      street: '',
+      postalCode: '',
+      city: '',
+      country: '',
+    },
+  });
 
   if (!token) {
     return <Navigate to="/login" replace />;
@@ -41,7 +51,7 @@ export default function Account() {
 
   const handleSave = async () => {
     try {
-      await usersApi.updateNames(form);
+      await usersApi.updateProfile(form);
 
       // refresh user info (depends on your hook implementation)
       window.location.reload(); // simple version
@@ -59,7 +69,14 @@ export default function Account() {
         username: userInfo.username || '',
         firstName: userInfo.firstName || '',
         lastName: userInfo.lastName || '',
-        email: userInfo.email || ''
+        email: userInfo.email || '',
+        phoneNumber: userInfo.phoneNumber || '',
+        address: {
+          street: userInfo.address.street || '',
+          postalCode: userInfo.address.postalCode || '',
+          city: userInfo.address.city || '',
+          country: userInfo.address.country || ''
+        }
       });
     }
   }, [userInfo]);
@@ -175,6 +192,84 @@ export default function Account() {
                       }
                     />
                   </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Phone number</label>
+                    <input
+                      className="form-control"
+                      value={form.phoneNumber}
+                      onChange={(e) =>
+                        setForm({ ...form, phoneNumber: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Street</label>
+                    <input
+                      className="form-control"
+                      value={form.address.street}
+                      onChange={(e) =>
+                        setForm({
+                           ...form,
+                           address: {
+                            ...form.address,
+                            street: e.target.value
+                           }
+                          })
+                      }
+                    />
+                  </div>
+                  
+                  <div className="mb-3">
+                    <label className="form-label">Postal code</label>
+                    <input
+                      className="form-control"
+                      value={form.address.postalCode}
+                      onChange={(e) =>
+                        setForm({
+                           ...form,
+                           address: {
+                            ...form.address,
+                            postalCode: e.target.value
+                           }
+                          })
+                      }
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">city</label>
+                    <input
+                      className="form-control"
+                      value={form.address.city}
+                      onChange={(e) =>
+                        setForm({
+                           ...form,
+                           address: {
+                            ...form.address,
+                            city: e.target.value
+                           }
+                          })
+                      }
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Country</label>
+                    <input
+                      className="form-control"
+                      value={form.address.country}
+                      onChange={(e) =>
+                        setForm({
+                           ...form,
+                           address: {
+                            ...form.address,
+                            country: e.target.value
+                           }
+                          })
+                      }
+                    />
+                  </div>
 {/* Currently Email can't be changed
                   <div className="mb-3">
                     <label className="form-label">Email</label>
@@ -199,6 +294,13 @@ export default function Account() {
                         setForm({
                           firstName: userInfo.firstName,
                           lastName: userInfo.lastName,
+                          phoneNumber: userInfo.phoneNumber,
+                          address: {
+                            street: userInfo.address.street,
+                            postalCode: userInfo.address.postalCode,
+                            city: userInfo.address.city,
+                            country: userInfo.address.country,
+                          },
                         });
                       }}
                     >

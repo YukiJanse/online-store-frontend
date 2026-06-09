@@ -30,4 +30,10 @@ export const usersApi = {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         }),
+    updateProfile: (data) =>
+        request('users/profile', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }),
 };

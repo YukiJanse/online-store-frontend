@@ -1,4 +1,4 @@
-import { request } from './client'
+import { request } from './clientDev'
 
 export const productsApi = {
     getAll: () => request('products'),
