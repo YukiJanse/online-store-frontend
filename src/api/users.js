@@ -16,6 +16,11 @@ export const usersApi = {
                 password,
             })
         }),
+    logout: () =>
+        request('users/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+        }),
     refresh: () =>
         request('users/refresh', {
             method: 'POST',
