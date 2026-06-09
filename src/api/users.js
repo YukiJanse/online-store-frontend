@@ -17,7 +17,7 @@ export const usersApi = {
             })
         }),
     logout: () =>
-        request('users/login', {
+        request('users/logout', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
         }),
