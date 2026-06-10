@@ -67,7 +67,7 @@ export default function Checkout() {
       <div className="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4"
         style={{ width: 72, height: 72, fontSize: '2rem' }}>✓</div>
       <h1 className="h2 fw-bold mb-2">Order placed!</h1>
-      <p className="text-muted mb-4">Your order <strong>{orderId}</strong> has been confirmed.</p>
+      <p className="text-muted mb-4">Your order has been confirmed.</p>
       <div className="d-flex gap-3 justify-content-center">
         <Link to="/account" className="btn btn-accent">View orders</Link>
         <Link to="/shop" className="btn btn-outline-secondary">Continue shopping</Link>
